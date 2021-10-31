@@ -1,0 +1,7 @@
+face_detector:
+  model: shape_predictor_5_face_landmarks.dat
+  final_size: 320
+
+uploader:
+  dir: images
+
