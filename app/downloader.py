@@ -7,9 +7,12 @@ logger = logging.getLogger(__name__)
 
 class Downloader:
     def __init__(self):
-        self._session = aiohttp.ClientSession()
+        self._session = None
 
     async def download_image(self, url):
+        if not self._session:
+            self._session = aiohttp.ClientSession()
+
         try:
             logger.debug(f"Downloading image from {url}")
             async with self._session.get(url) as response:

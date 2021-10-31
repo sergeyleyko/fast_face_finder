@@ -1,13 +1,12 @@
 import logging
 import os
 
+import anyconfig
 import uvicorn
 from fastapi import FastAPI
-import anyconfig
 
 from dlib_face_detector import DlibFaceDetector
 from downloader import Downloader
-from face_detector import FaceDetector
 from uploader import Uploader
 from url_parser import UrlParser
 

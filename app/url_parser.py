@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class UrlParser:
     def __init__(self):
-        self._session = aiohttp.ClientSession()
+        self._session = None
 
     def is_valid(self, url):
         """
@@ -45,6 +45,9 @@ class UrlParser:
         return list(urls)
 
     async def get_url_images(self, url):
+        if not self._session:
+            self._session = aiohttp.ClientSession()
+
         if not url.startswith("http"):
             url = f"https://{url}"
         try:
@@ -58,7 +61,8 @@ class UrlParser:
                         return image_urls
                 else:
                     raise ValueError(f'Error status {response.status} while downloading an image')
-        except (ValueError, InvalidURL) as err:
+        except (ValueError, InvalidURL, RuntimeError) as err:
+            logger.error(f"Error when with getting data from {url}")
             logger.error(err)
         except:
             # I know, I know..
