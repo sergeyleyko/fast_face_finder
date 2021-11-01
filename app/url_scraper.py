@@ -13,10 +13,20 @@ logger = logging.getLogger(__name__)
 
 
 class UrlScraper(BaseUrlScraper):
+    """
+
+    """
+
     def __init__(self):
         self._session = None
 
-    def find_urls(self, url, body):
+    def find_img_urls(self, url: str, body: str):
+        """
+        Find all urls in the body of the URL
+        :param url: url body from
+        :param body: the body string
+        :return: list of images urls
+        """
         urls = set()
         soup = bs(body, "html.parser")
 
@@ -33,6 +43,11 @@ class UrlScraper(BaseUrlScraper):
         return list(urls)
 
     async def get_url_images(self, url):
+        """
+        Download page at url and find all the images links there
+        :param url: url
+        :return: list of images urls
+        """
         if not self._session:
             self._session = aiohttp.ClientSession()
 
@@ -43,7 +58,7 @@ class UrlScraper(BaseUrlScraper):
                         return [url]
                     else:
                         html = await response.text()
-                        image_urls = self.find_urls(url, html)
+                        image_urls = self.find_img_urls(url, html)
                         return image_urls
                 else:
                     raise ValueError(f'Error status {response.status} while downloading an image')

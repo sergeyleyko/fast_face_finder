@@ -12,6 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 class FaceDetector(BaseFaceDetector):
+    """
+    Face detector based on mediapipe library.
+    """
     def __init__(self):
         self._mp_face_detection = mp.solutions.face_detection
         self._mp_drawing = mp.solutions.drawing_utils
@@ -36,8 +39,7 @@ class FaceDetector(BaseFaceDetector):
             image_rows)
         return rect_start_point, rect_end_point
 
-    async def detect_faces(self, image_bytes):
-        # For static images:
+    async def detect_faces(self, image_bytes: bytes):
         with self._mp_face_detection.FaceDetection(
                 model_selection=1, min_detection_confidence=0.5) as face_detection:
             np_arr = np.asarray(bytearray(image_bytes), dtype="uint8")

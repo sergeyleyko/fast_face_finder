@@ -4,6 +4,7 @@ import re
 
 import cv2
 import unicodedata
+from numpy import ndarray
 
 from abs import BaseUploader
 
@@ -11,11 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 class Uploader(BaseUploader):
-    def __init__(self, target_dir):
+    def __init__(self, target_dir: str):
         self._target_dir = target_dir
         pass
 
-    def slugify(self, value):
+    def slugify(self, value: str):
         """
         Convert spaces or repeated dashes to single dashes.
         Remove characters that aren't alphanumerics, underscores, or hyphens.
@@ -27,7 +28,15 @@ class Uploader(BaseUploader):
         value = re.sub(r'[^\w\s-]', '', value.lower())
         return re.sub(r'[-\s]+', '-', value).strip('-_')
 
-    async def upload_image(self, initial_url, image_url, face_index, face_image):
+    async def upload_image(self, initial_url: str, image_url: str, face_index: int, face_image: ndarray):
+        """
+        Uploads/saves images to persistent storage.
+        :param initial_url: initial url (in request)
+        :param image_url: image url
+        :param face_index: index of a face index this image
+        :param face_image: the face image itself
+        :return:
+        """
         safe_src_url = self.slugify(initial_url)
         url_dir = os.path.join(self._target_dir, safe_src_url)
         if not os.path.exists(url_dir):

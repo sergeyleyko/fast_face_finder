@@ -10,12 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 class DlibFaceDetector(BaseFaceDetector):
-    def __init__(self, predictor_model_file, final_image_size=320):
+    """
+    FaceDetector and aligner based on dlib library
+    """
+
+    def __init__(self, predictor_model_file: str, final_image_size: int = 320):
         self._detector = dlib.get_frontal_face_detector()
         self._shape_predictor = dlib.shape_predictor(predictor_model_file)
         self._final_image_size = final_image_size
 
-    async def detect_faces(self, image_bytes):
+    async def detect_faces(self, image_bytes: bytes):
         np_arr = np.asarray(bytearray(image_bytes), dtype="uint8")
         cv_image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
