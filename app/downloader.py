@@ -2,10 +2,13 @@ import logging
 import sys
 
 import aiohttp
+
+from abs import BaseDownloader
+
 logger = logging.getLogger(__name__)
 
 
-class Downloader:
+class Downloader(BaseDownloader):
     def __init__(self):
         self._session = None
 

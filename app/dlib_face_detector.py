@@ -4,10 +4,12 @@ import cv2
 import dlib
 import numpy as np
 
+from abs import BaseFaceDetector
+
 logger = logging.getLogger(__name__)
 
 
-class DlibFaceDetector:
+class DlibFaceDetector(BaseFaceDetector):
     def __init__(self, predictor_model_file, final_image_size=320):
         self._detector = dlib.get_frontal_face_detector()
         self._shape_predictor = dlib.shape_predictor(predictor_model_file)

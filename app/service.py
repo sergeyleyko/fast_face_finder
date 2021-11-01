@@ -1,11 +1,17 @@
 import asyncio
 import logging
 
+from abs import BaseDownloader, BaseUrlScraper, BaseUploader, BaseFaceDetector
+
 logger = logging.getLogger(__name__)
 
 
 class FaceService:
-    def __init__(self, url_parser, downloader, uploader, face_detector):
+    def __init__(self,
+                 url_parser: BaseUrlScraper,
+                 downloader: BaseDownloader,
+                 uploader: BaseUploader,
+                 face_detector: BaseFaceDetector):
         self._url_parser = url_parser
         self._downloader = downloader
         self._uploader = uploader

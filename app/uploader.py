@@ -5,10 +5,12 @@ import re
 import cv2
 import unicodedata
 
+from abs import BaseUploader
+
 logger = logging.getLogger(__name__)
 
 
-class Uploader:
+class Uploader(BaseUploader):
     def __init__(self, target_dir):
         self._target_dir = target_dir
         pass

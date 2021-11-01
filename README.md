@@ -1,5 +1,5 @@
 # Fast Face Finder
-Finds faces at url
+Finds faces at an url
 
 ## Description
 

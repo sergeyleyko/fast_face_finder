@@ -3,12 +3,15 @@ import logging
 import cv2
 import mediapipe as mp
 import numpy as np
-from mediapipe.framework.formats import detection_pb2, location_data_pb2
+from mediapipe.framework.formats import detection_pb2
 from mediapipe.python.solutions.drawing_utils import _normalized_to_pixel_coordinates
+
+from abs import BaseFaceDetector
 
 logger = logging.getLogger(__name__)
 
-class FaceDetector:
+
+class FaceDetector(BaseFaceDetector):
     def __init__(self):
         self._mp_face_detection = mp.solutions.face_detection
         self._mp_drawing = mp.solutions.drawing_utils

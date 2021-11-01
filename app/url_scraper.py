@@ -1,32 +1,20 @@
 import logging
 import sys
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 
 import aiohttp
-from aiohttp import InvalidURL
+from aiohttp import InvalidURL, ClientConnectorError
 from bs4 import BeautifulSoup as bs
+
+from abs import BaseUrlScraper, InvalidUrlException
+from url_utils import clean_url, is_valid_url
 
 logger = logging.getLogger(__name__)
 
 
-class UrlParser:
+class UrlScraper(BaseUrlScraper):
     def __init__(self):
         self._session = None
-
-    def is_valid(self, url):
-        """
-        Checks whether `url` is a valid URL.
-        """
-        parsed = urlparse(url)
-        return bool(parsed.netloc) and bool(parsed.scheme)
-
-    def clean_url(self, url):
-        try:
-            pos = url.index("?")
-            url = url[:pos]
-        except ValueError:
-            pass
-        return url
 
     def find_urls(self, url, body):
         urls = set()
@@ -39,8 +27,8 @@ class UrlParser:
                 continue
 
             img_url = urljoin(url, img_url)
-            img_url = self.clean_url(img_url)
-            if self.is_valid(img_url):
+            img_url = clean_url(img_url)
+            if is_valid_url(img_url):
                 urls.add(img_url)
         return list(urls)
 
@@ -48,8 +36,6 @@ class UrlParser:
         if not self._session:
             self._session = aiohttp.ClientSession()
 
-        if not url.startswith("http"):
-            url = f"https://{url}"
         try:
             async with self._session.get(url) as response:
                 if response.status == 200:
@@ -61,11 +47,12 @@ class UrlParser:
                         return image_urls
                 else:
                     raise ValueError(f'Error status {response.status} while downloading an image')
-        except (ValueError, InvalidURL, RuntimeError) as err:
+        except (ValueError, InvalidURL, RuntimeError, ClientConnectorError) as err:
             logger.error(f"Error when with getting data from {url}")
             logger.error(err)
+            raise InvalidUrlException() from err
         except:
-            # I know, I know..
+            # Used for debugging
             logger.error(f"Something wrong with getting data from {url}")
             logger.debug(sys.exc_info()[0])
             raise
