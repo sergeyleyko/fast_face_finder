@@ -12,25 +12,32 @@ Configuration is in the _config.yml_ file. Here you can configure the dlib model
 face landmarks detection, and the final face image file size.  
 
 ## Usage 
-To build Docker image:
 
-docker build -t fast_face_finder .
+### Run using the uvicorn:
+
+uvicorn --workers 4 main:app 
+
+
+### Docker
+ - build Docker image:
+
+> docker build -t fast_face_finder .
 
 It will take a while as dlib compiling is a long process.
 
-Then run the container:
+ - run the container:
 
 > mkdir $(pwd)/detected_faces
 >
 > docker run -d --name fast_face_finder -p 80:80 -v $(pwd)/detected_faces:/app/images fast_face_finder
 
-It will mount the host directory ./detected_faces/ into /app/images/ in the container.
-Faces will be collected into 'images' directory on the docker host machine.
+The _-v_ docker argument is optional. It will mount the host directory _./detected_faces/_ into _/app/images/_ in the container, where all faces images will be collected in.
 
 The container exposes port 80, you can make _get_ requests to it, the endpoint name is **faces**. 
 It accepts **url** query argument with the url to parse for images.
 
 Url has to be encoded, you can use _https://www.urlencoder.org/_ for that.
+
 
 Example (open in browser):
 > http://127.0.0.1/faces?url=abc.com
